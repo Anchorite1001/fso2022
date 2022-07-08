@@ -1,6 +1,15 @@
 import { useState } from 'react';
 
-const Statistics = ({good, neutral, bad}) => (
+const Statistics = ({good, neutral, bad}) => {
+  if (good+neutral+bad === 0) {
+    return (
+      <div>
+        <h1>Statistics</h1>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+  return (
     <div>
       <h1>Statistics</h1>
       <p>good {good}</p>
@@ -11,6 +20,7 @@ const Statistics = ({good, neutral, bad}) => (
       <p>positive {(good+neutral) / (good+neutral+bad) *100}%</p>
     </div>
   )
+}
 
 const App = () => {
   const [good, setGood] = useState(0)
