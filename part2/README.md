@@ -1,0 +1,1 @@
+Exercises 2.1-2.5 is in part 1 folder (courseinfo project).
