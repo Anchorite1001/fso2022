@@ -1,5 +1,9 @@
 import { useState } from 'react'
 
+import Filter from './components/Filter'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -8,6 +12,7 @@ const App = () => {
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]) 
 
+  //search feature
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResult, setSearchResult] = useState([])
 
@@ -24,6 +29,7 @@ const App = () => {
     
   }
 
+  //add new contact feature
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
@@ -52,37 +58,23 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with 
-        <input 
-        value={searchQuery} 
-        onChange={handleSearchChange}
-        />
-      </div>
-      {searchResult.map(result => 
-        <p key={result.id}>{result.name} {result.number}</p>)}
+      <Filter 
+        searchQuery={searchQuery} 
+        handleSearchChange={handleSearchChange} 
+      />
+      <Persons personArr={searchResult} />
 
       <h3>Add a new contact</h3>
-      <form onSubmit={handlePersonSubmit}>
-        <div>
-          name: <input 
-                  value={newName}
-                  onChange={handleNameChange}
-                />
-          <br />
-          number: <input 
-                  value={newNumber}
-                  onChange={handleNumberChange}
-                />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+        handlePersonSubmit={handlePersonSubmit} 
+        newName={newName} 
+        handleNameChange={handleNameChange} 
+        newNumber={newNumber} 
+        handleNumberChange={handleNumberChange}
+      />
+
       <h3>Numbers</h3>
-      {persons.map(person => 
-        <p key={person.id}>{person.name} {person.number}</p>
-      )}
+      <Persons personArr={persons}/>
     </div>
   )
 }
