@@ -3,15 +3,22 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3001/persons';
 
 const getAll = () => {
-    return axios.get(baseUrl);
+    const request = axios.get(baseUrl);
+    return request.then(response => response.data)
 }
 
 const create = (personObject) => {
-    return axios.post(baseUrl, personObject);
+    const request = axios.post(baseUrl, personObject);
+    return request.then(response => response.data)
 }
 
 const erase = (id) => {
     return axios.delete(`${baseUrl}/${id}`);
 }
 
-export default { getAll, create, erase }
+const update = (id, changedPerson) => {
+    const request = axios.put(`${baseUrl}/${id}`, changedPerson);
+    return request.then(response => response.data)
+}
+
+export default { getAll, create, erase, update }

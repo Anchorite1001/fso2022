@@ -8,13 +8,13 @@ import personServices from './services/person';
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
-  const { getAll, create } = personServices
+  const { getAll, create, update } = personServices
 
   //fetch persons data
   useEffect(() => {
     getAll()
-      .then(response => {
-        setPersons(response.data)
+      .then(personsData => {
+        setPersons(personsData)
       })
   }, [])
 
@@ -51,12 +51,19 @@ const App = () => {
     const nameList = Array.from(persons, person => person.name);
 
     if (nameList.includes(newName)) {
-      alert(`${newName} is already added to the phonebook`)
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
+        const existingPerson = persons.filter(person => person.name === newName)[0];
+        const changedPerson = {...existingPerson, number: newNumber};
+
+        update(existingPerson.id, changedPerson)
+          .then(returnedPerson => 
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson)))
+      }
     }
     else {
       const personObject = { name: newName, number: newNumber, id: persons.length+1 };
       create(personObject)
-        .then(response => setPersons(persons.concat(response.data)))
+        .then(newPerson => setPersons(persons.concat(newPerson)))
       setNewName('');
       setNewNumber('');
     }
