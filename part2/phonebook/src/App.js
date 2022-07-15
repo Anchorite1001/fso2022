@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 
 import personServices from './services/person';
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
+  const [newPersonMessage, setNewPersonMessage] = useState(null)
   const { getAll, create, update } = personServices
 
   //fetch persons data
@@ -62,16 +64,18 @@ const App = () => {
     }
     else {
       const personObject = { name: newName, number: newNumber, id: persons.length+1 };
-      create(personObject)
-        .then(newPerson => setPersons(persons.concat(newPerson)))
+      create(personObject).then(newPerson => setPersons(persons.concat(newPerson)));
       setNewName('');
       setNewNumber('');
+      setNewPersonMessage(`Added ${newName}`)
+      setTimeout(() => {setNewPersonMessage(null)}, 3000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={newPersonMessage}/>
       <Filter 
         searchQuery={searchQuery} 
         handleSearchChange={handleSearchChange} 
