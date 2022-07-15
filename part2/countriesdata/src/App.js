@@ -5,6 +5,7 @@ import Result from './components/Result'
 
 const App = () => {
   const [countriesInfo, setCountriesInfo] = useState([])
+
   useEffect(() => {
     axios
       .get('https://restcountries.com/v3.1/all')

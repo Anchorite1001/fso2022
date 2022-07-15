@@ -52,10 +52,10 @@ const App = () => {
     e.preventDefault();
     const nameList = Array.from(persons, person => person.name);
 
-    // name already exists
+    // name already exists: update contact
     if (nameList.includes(newName)) {
       if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
-        const existingPerson = persons.filter(person => person.name === newName)[0];
+        const existingPerson = persons.find(person => person.name === newName);
         const changedPerson = {...existingPerson, number: newNumber};
 
         update(existingPerson.id, changedPerson)
@@ -67,7 +67,7 @@ const App = () => {
           })
       }
     }
-    //name not exists
+    //name not exists: create contact
     else {
       const personObject = { name: newName, number: newNumber, id: persons.length+1 };
       create(personObject)
