@@ -1,11 +1,13 @@
 const Notification = ({ message }) => {
-    if(!message) {
+    let {mode, content} = message;
+
+    if(!content) {
         return null
     }
 
     return (
-        <div className='notification'>
-            {message}
+        <div className={mode} >
+            {content}
         </div>
     )
 }

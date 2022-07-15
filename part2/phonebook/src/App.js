@@ -9,7 +9,7 @@ import personServices from './services/person';
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
-  const [newPersonMessage, setNewPersonMessage] = useState(null)
+  const [message, setMessage] = useState({mode:null, content: null})
   const { getAll, create, update } = personServices
 
   //fetch persons data
@@ -52,6 +52,7 @@ const App = () => {
     e.preventDefault();
     const nameList = Array.from(persons, person => person.name);
 
+    // name already exists
     if (nameList.includes(newName)) {
       if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
         const existingPerson = persons.filter(person => person.name === newName)[0];
@@ -60,22 +61,31 @@ const App = () => {
         update(existingPerson.id, changedPerson)
           .then(returnedPerson => 
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson)))
+          .catch(error => {
+            setMessage({mode: 'error', content: `Information of ${newName} has already been removed from server`});
+            setTimeout(() => setMessage({mode: null, content: null}), 3000)
+          })
       }
     }
+    //name not exists
     else {
       const personObject = { name: newName, number: newNumber, id: persons.length+1 };
-      create(personObject).then(newPerson => setPersons(persons.concat(newPerson)));
+      create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson));
+        setMessage({mode: 'notification', content:`Added ${newName}`})
+        setTimeout(() => {setMessage({mode: null, content: null})}, 3000)
+      });
+
       setNewName('');
       setNewNumber('');
-      setNewPersonMessage(`Added ${newName}`)
-      setTimeout(() => {setNewPersonMessage(null)}, 3000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={newPersonMessage}/>
+      <Notification message={message}/>
       <Filter 
         searchQuery={searchQuery} 
         handleSearchChange={handleSearchChange} 
