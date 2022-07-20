@@ -24,6 +24,15 @@ let persons = [
     }
 ]
 
+app.get('/info', (request, response) => {
+    let today= new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+
+    response.send(
+        `<p>Phonebook has info for ${persons.length} people</p>
+        <p>${today}(Coordinated Universal Time)</p>`
+    )
+})
+
 app.get('/api/persons',(request, response) => {
     response.json(persons);
 })
