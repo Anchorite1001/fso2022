@@ -33,10 +33,12 @@ app.get('/info', (request, response) => {
     )
 })
 
+// get all people in phonebook
 app.get('/api/persons',(request, response) => {
     response.json(persons);
 })
 
+//get one person in phonebook
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
     let person = persons.find(person => person.id === id);
@@ -49,6 +51,14 @@ app.get('/api/persons/:id', (request, response) => {
             error: 'person does not exist in the phone book' 
         })
     }
+})
+
+//delete a person
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id);
+    persons = persons.filter(person => person.id !== id)
+
+    response.status(204).end()
 })
 
 const PORT = 3001
