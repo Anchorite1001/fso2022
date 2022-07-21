@@ -74,6 +74,20 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
     const {name, number} = request.body;
+
+    if(!name || !number) {
+        return response.status(400).json({
+            error: 'Please provide valid name and number'
+        })
+    }
+
+    const nameList = Array.from(persons, person => person.name)
+    if (nameList.includes(name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+
     const newPerson = {
         id: generateId(),
         name,
