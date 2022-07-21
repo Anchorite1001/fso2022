@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+//json parser to access data in request
+app.use(express.json())
+
 let persons = [
     { 
       "id": 1,
@@ -59,6 +62,25 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
+})
+
+//create a new person entry
+const generateId = () => {
+    const maxId = persons.length > 0
+      ? Math.max(...persons.map(n => n.id))
+      : 0
+    return maxId + 1
+}
+
+app.post('/api/persons', (request, response) => {
+    const {name, number} = request.body;
+    const newPerson = {
+        id: generateId(),
+        name,
+        number
+    }
+    persons = persons.concat(newPerson);
+    response.json(newPerson)
 })
 
 const PORT = 3001
