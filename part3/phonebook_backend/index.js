@@ -1,8 +1,12 @@
 const express = require('express')
+const morgan = require('morgan')
+
 const app = express()
 
-//json parser to access data in request
+//middleware: json parser to access data in request
 app.use(express.json())
+//middleware: log messages to console
+app.use(morgan('tiny'))
 
 let persons = [
     { 
