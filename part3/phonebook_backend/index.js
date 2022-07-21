@@ -6,7 +6,10 @@ const app = express()
 //middleware: json parser to access data in request
 app.use(express.json())
 //middleware: log messages to console
-app.use(morgan('tiny'))
+morgan.token('requestData', function getRequestData(request) {
+    return JSON.stringify(request.body)
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :requestData'))
 
 let persons = [
     { 
