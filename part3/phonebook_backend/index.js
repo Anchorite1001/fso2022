@@ -37,7 +37,7 @@ app.get('/api/persons',(request, response) => {
 
 //get one person in phonebook
 app.get('/api/persons/:id', (request, response, next) => {
-    Person.findById(Number(request.params.id))
+    Person.findById(request.params.id)
     .then(person => {
         if(person) {
             response.json(person)
