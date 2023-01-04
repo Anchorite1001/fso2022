@@ -18,17 +18,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 app.use(cors())
 //middleware: serve static build folder as frontend
 app.use(express.static('build'))
-//middleware: error handling
-const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-  
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    } 
-  
-    next(error)
-}
-app.use(errorHandler)
 
 app.get('/info', (request, response) => {
     let today= new Date().toLocaleString('en-US', { timeZone: 'UTC' });
@@ -47,22 +36,21 @@ app.get('/api/persons',(request, response) => {
 })
 
 //get one person in phonebook
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
-    let person = persons.find(person => person.id === id);
-
-    if(person) {
-        response.json(person)
-    }
-    else {
-        response.status(404).json({
-            error: 'person does not exist in the phone book' 
-        })
-    }
+app.get('/api/persons/:id', (request, response, next) => {
+    Person.findById(Number(request.params.id))
+    .then(person => {
+        if(person) {
+            response.json(person)
+        }
+        else{
+            response.status(404).json({error: 'person does not exist'})
+        }
+    })
+    .catch(err => next(err))
 })
 
 //delete a person
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
     .then(res => {
         response.status(204).end()
@@ -78,7 +66,7 @@ const generateId = () => {
     return maxId + 1
 }
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const {name, number} = request.body;
 
     if(!name || !number) {
@@ -113,6 +101,19 @@ app.post('/api/persons', (request, response) => {
     })
     .catch(err => next(err))
 })
+
+//middleware: error handling
+const errorHandler = (error, request, response, next) => {
+    console.error(error.name)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    }
+  
+    next(error)
+}
+app.use(errorHandler)
+
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
