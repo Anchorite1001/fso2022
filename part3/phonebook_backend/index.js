@@ -20,10 +20,10 @@ app.use(cors())
 app.use(express.static('build'))
 
 app.get('/info', (request, response) => {
-    let today= new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+    let today= new Date().toLocaleString('en-US', { timeZone: 'UTC' })
 
     response.send(
-        `<p>Phonebook has info for ${persons.length} people</p>
+        `<p>Phonebook</p>
         <p>${today}(Coordinated Universal Time)</p>`
     )
 })
@@ -38,36 +38,37 @@ app.get('/api/persons',(request, response) => {
 //get one person in phonebook
 app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id)
-    .then(person => {
-        if(person) {
-            response.json(person)
-        }
-        else{
-            response.status(404).json({error: 'person does not exist'})
-        }
-    })
-    .catch(err => next(err))
+        .then(person => {
+            if(person) {
+                response.json(person)
+            }
+            else{
+                response.status(404).json({ error: 'person does not exist' })
+            }
+        })
+        .catch(err => next(err))
 })
 
 //delete a person
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-    .then(res => {
-        response.status(204).end()
-    })
-    .catch(err => next(err))
+        // eslint-disable-next-line no-unused-vars
+        .then(res => {
+            response.status(204).end()
+        })
+        .catch(err => next(err))
 })
 
-//create a new person entry
-const generateId = () => {
-    const maxId = persons.length > 0
-      ? Math.max(...persons.map(n => n.id))
-      : 0
-    return maxId + 1
-}
+// //create a new person entry
+// const generateId = () => {
+//     const maxId = persons.length > 0
+//         ? Math.max(...persons.map(n => n.id))
+//         : 0
+//     return maxId + 1
+// }
 
 app.post('/api/persons', (request, response, next) => {
-    const {name, number} = request.body;
+    const { name, number } = request.body
 
     if(!name || !number) {
         return response.status(400).json({
@@ -83,51 +84,52 @@ app.post('/api/persons', (request, response, next) => {
     // }
 
     const newPerson = new Person({
-        name, 
+        name,
         number
     })
 
     newPerson.save()
-    .then(res => {
-        response.json(res)
-    })
-    .catch(err => next(err))
+        .then(res => {
+            response.json(res)
+        })
+        .catch(err => next(err))
 })
 
 //update a contact
 app.put('/api/persons/:id', (request, response, next) => {
-    const {name, number} = request.body
+    const { name, number } = request.body
     const updatedPerson = {
         name,
         number
     }
 
-    Person.findByIdAndUpdate(request.params.id, updatedPerson, 
-    {new:true, runValidators: true, context: 'query'}
+    Person.findByIdAndUpdate(request.params.id, updatedPerson,
+        { new:true, runValidators: true, context: 'query' }
     )
-    .then(res => {
-        response.json(res)
-    })
-    .catch(err => next(err))
+        .then(res => {
+            response.json(res)
+        })
+        .catch(err => next(err))
 })
 
 //middleware: error handling
 const errorHandler = (error, request, response, next) => {
     console.error(error.name)
-  
+
     if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
+        return response.status(400).send({ error: 'malformatted id' })
     }
     else if (error.name === 'ValidationError') {
-        return response.status(400).json({error: error.message})
+        return response.status(400).json({ error: error.message })
     }
-  
+
     next(error)
 }
 app.use(errorHandler)
 
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`)
 })
