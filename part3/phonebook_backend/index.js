@@ -2,6 +2,9 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 
+//import mongoDB model
+const Person = require('./models/person')
+
 const app = express()
 
 //middleware: json parser to access data in request
@@ -50,7 +53,10 @@ app.get('/info', (request, response) => {
 
 // get all people in phonebook
 app.get('/api/persons',(request, response) => {
-    response.json(persons);
+    //response.json(persons);
+    Person.find({}).then(res => {
+        response.json(res)
+    })
 })
 
 //get one person in phonebook
