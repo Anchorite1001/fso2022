@@ -53,7 +53,6 @@ app.get('/info', (request, response) => {
 
 // get all people in phonebook
 app.get('/api/persons',(request, response) => {
-    //response.json(persons);
     Person.find({}).then(res => {
         response.json(res)
     })
@@ -99,20 +98,29 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const nameList = Array.from(persons, person => person.name)
-    if (nameList.includes(name)) {
-        return response.status(400).json({
-            error: 'name must be unique'
-        })
-    }
+    // const nameList = Array.from(persons, person => person.name)
+    // if (nameList.includes(name)) {
+    //     return response.status(400).json({
+    //         error: 'name must be unique'
+    //     })
+    // }
 
-    const newPerson = {
-        id: generateId(),
-        name,
+    // const newPerson = {
+    //     id: generateId(),
+    //     name,
+    //     number
+    // }
+    // persons = persons.concat(newPerson);
+    // response.json(newPerson)
+
+    const newPerson = new Person({
+        name, 
         number
-    }
-    persons = persons.concat(newPerson);
-    response.json(newPerson)
+    })
+    newPerson.save()
+    .then(res => {
+        response.json(res)
+    })
 })
 
 const PORT = process.env.PORT || 3001
