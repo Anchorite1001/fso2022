@@ -1,19 +1,4 @@
-require('dotenv').config()
 const mongoose = require('mongoose')
-
-// eslint-disable-next-line no-undef
-const url = process.env.MONGODB_URL
-
-console.log('connecting to ', url)
-
-//connect to mongoDB
-mongoose
-    .connect(url)
-    // eslint-disable-next-line no-unused-vars
-    .then(res => {
-        console.log('connected to MongoDB')
-    })
-    .catch(err => console.log(err))
 
 //map out mongoDB collection
 const personSchema = new mongoose.Schema({
