@@ -82,20 +82,27 @@ app.post('/api/persons', (request, response, next) => {
     //     })
     // }
 
-    // const newPerson = {
-    //     id: generateId(),
-    //     name,
-    //     number
-    // }
-    // persons = persons.concat(newPerson);
-    // response.json(newPerson)
-
     const newPerson = new Person({
         name, 
         number
     })
 
     newPerson.save()
+    .then(res => {
+        response.json(res)
+    })
+    .catch(err => next(err))
+})
+
+//update a contact
+app.put('/api/persons/:id', (request, response, next) => {
+    const {name, number} = request.body
+    const updatedPerson = {
+        name,
+        number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, updatedPerson, {new:true})
     .then(res => {
         response.json(res)
     })

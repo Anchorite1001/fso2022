@@ -76,10 +76,9 @@ const App = () => {
         setMessage({mode: 'notification', content:`Added ${newName}`})
         setTimeout(() => {setMessage({mode: null, content: null})}, 3000)
       });
-
-      setNewName('');
-      setNewNumber('');
     }
+    setNewName('');
+    setNewNumber('');
   }
 
   return (
