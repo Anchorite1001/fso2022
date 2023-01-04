@@ -62,7 +62,7 @@ const App = () => {
           .then(returnedPerson => 
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson)))
           .catch(error => {
-            setMessage({mode: 'error', content: `Information of ${newName} has already been removed from server`});
+            setMessage({mode: 'error', content: error.response.data.error});
             setTimeout(() => setMessage({mode: null, content: null}), 3000)
           })
       }
@@ -75,6 +75,10 @@ const App = () => {
         setPersons(persons.concat(newPerson));
         setMessage({mode: 'notification', content:`Added ${newName}`})
         setTimeout(() => {setMessage({mode: null, content: null})}, 3000)
+      })
+      .catch(error => {
+        setMessage({mode: 'error', content: error.response.data.error});
+        setTimeout(() => setMessage({mode: null, content: null}), 3000)
       });
     }
     setNewName('');
