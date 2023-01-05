@@ -52,7 +52,22 @@ test('a new blog is added', async () => {
     expect(titles).toContain(
         'React patterns Renewal'
     )
-}, 100000)
+})
+
+test ('if the likes property of new blog is missing during creation, it would be set to 0', async () => {
+    const newBlog = {
+        _id: '5a422a851b54a676234c17e7',
+        title: 'React patterns Renewal',
+        author: 'Michael Chan',
+        url: 'https://reactpatternsrenewal.com/',
+        __v: 0
+    }
+
+    const response = await api.post('/api/blogs').send(newBlog)
+
+    expect(response.body.likes).toBeDefined()
+    expect(response.body.likes).toBe(0)
+})
 
 afterAll(() => {
     mongoose.connection.close()
