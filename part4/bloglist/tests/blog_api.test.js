@@ -92,6 +92,20 @@ test ('if the url is missing, the bakcend would respond 400 bad request and no b
         .expect(400)
 }, 10000)
 
+test ('delete a note', async () => {
+    const noteToDelete = testingLists.blogs[0]
+
+    await api
+        .delete(`/api/blogs/${noteToDelete._id}`)
+        .expect(204)
+
+    const response = await api.get('/api/blogs')
+    const titles = response.body.map(blog => blog.title)
+
+    expect(response.body).toHaveLength(testingLists.blogs.length - 1)
+    expect(titles).not.toContain(noteToDelete.title)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
