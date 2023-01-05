@@ -69,6 +69,29 @@ test ('if the likes property of new blog is missing during creation, it would be
     expect(response.body.likes).toBe(0)
 })
 
+test ('if the title is missing, the backend would respond 400 bad request and no blog entry would be created', async () => {
+    const newBlog = {
+        url: 'https://reactpatternsrenewal.com/'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+
+}, 10000)
+
+test ('if the url is missing, the bakcend would respond 400 bad request and no blog entry would be created', async () => {
+    const newBlog = {
+        author: 'Michael Chan'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+}, 10000)
+
 afterAll(() => {
     mongoose.connection.close()
 })
