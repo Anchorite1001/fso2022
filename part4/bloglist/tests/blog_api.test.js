@@ -106,6 +106,25 @@ test ('delete a note', async () => {
     expect(titles).not.toContain(noteToDelete.title)
 })
 
+test ('update a blog', async () => {
+    const newBlog = {
+        _id: '5a422a851b54a676234d17f7',
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 10,
+        __v: 0
+    }
+
+    await api
+        .put(`/api/blogs/${newBlog._id}`)
+        .send(newBlog)
+        .expect('Content-Type', /application\/json/)
+    
+    const response = await api.get('/api/blogs')
+    expect(response.body.find(blog => blog.id === newBlog._id)['likes']).toBe(10)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
