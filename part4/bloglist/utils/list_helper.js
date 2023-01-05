@@ -26,10 +26,26 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
     const blogsCount = _.countBy(blogs, _.iteratee('author'))
     const result = _.reduce(blogsCount, (result, value, key) => {
-        return (result['blogs'] < value) 
+        return result['blogs'] < value
             ? {'author':key, 'blogs':value} 
             : result
     }, {'author':'', 'blogs':0})
+    return result
+}
+
+const mostLikes = (blogs) => {
+    const authorGroup = _.groupBy(blogs, _.iteratee('author'))
+    const likesCount = _.mapValues(authorGroup, (arr) => {
+        const likesArr = _.map(arr, 'likes')
+        return _.reduce(likesArr, (prev, cur) => {
+            return prev + cur
+        }, 0)
+    })
+    const result = _.reduce(likesCount, (result, value, key) => {
+        return result['likes'] < value
+            ? {'author': key, 'likes': value}
+            : result
+    }, {'author': '', 'likes': 0})
     return result
 }
 
@@ -37,5 +53,6 @@ module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

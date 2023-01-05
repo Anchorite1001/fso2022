@@ -48,11 +48,37 @@ describe('favoriteBlog', () => {
 })
 
 describe('mostBlogs', () => {
-    test('when list has multiple blogs, equals to the object with author with most blogs and the number of blogs', () => {
+    test('when list has one blog, equals that author and number of blogs', () => {
+        const result = listHelper.mostBlogs(testingLists.listWithOneBlog)
+        expect(result).toEqual({
+            author: 'Edsger W. Dijkstra',
+            blogs: 1
+        })
+    }) 
+
+    test('when list has multiple blogs, equals an object with author with most blogs and the count of blogs', () => {
         const result = listHelper.mostBlogs(testingLists.blogs)
         expect(result).toEqual({
             author: 'Robert C. Martin',
             blogs: 3
+        })
+    })
+})
+
+describe('mostLikes', () => {
+    test('when list has one blog, equals an object with the author and likes', () => {
+        const result = listHelper.mostLikes(testingLists.listWithOneBlog)
+        expect(result).toEqual({
+            author: 'Edsger W. Dijkstra',
+            likes: 5
+        })
+    })
+
+    test('when list has multiple blogs, equals the author with most likes and the count of likes', () => {
+        const result = listHelper.mostLikes(testingLists.blogs)
+        expect(result).toEqual({
+            author: 'Edsger W. Dijkstra',
+            likes: 17
         })
     })
 })
