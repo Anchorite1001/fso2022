@@ -39,6 +39,44 @@ describe ('where there is initially one user in db', () => {
         expect(usernames).toContain(newUser.username)
 
     })
+
+    test('if a username is taken then return error message with status code 400', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'root',
+            name: 'false root',
+            password: 'passpass'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd.length).toBe(usersAtStart.length)
+    })
+
+    test('if password is shorter than 3 characters then return error message with status code 400', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'shortpass',
+            name: 'short pass',
+            password: 'pa'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd.length).toBe(usersAtStart.length)
+    })
 })
 
 afterAll(() => {
