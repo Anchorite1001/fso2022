@@ -1,7 +1,6 @@
 const _ = require('lodash')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const { set } = require('../app')
 const app = require('../app')
 const Blog = require('../models/blog')
 const testingLists = require('./BlogList')
