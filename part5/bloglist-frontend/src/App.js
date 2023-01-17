@@ -3,12 +3,16 @@ import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
+import './App.css';
+
 const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
     const [errorMessage, setErrorMessage] = useState('');
+    const [message, setMessage] = useState('');
 
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
@@ -41,7 +45,7 @@ const App = () => {
             setPassword('');
         }
         catch (exception) {
-            setErrorMessage('Wrong Credentials');
+            setErrorMessage('Wrong username or password');
             setTimeout(() => setErrorMessage(''), 5000);
         }
     };
@@ -62,6 +66,9 @@ const App = () => {
             setTitle('');
             setAuthor('');
             setUrl('');
+
+            setMessage(`A new blog ${newBlog.title} by ${newBlog.author} added`);
+            setTimeout(() => setMessage(''), 5000);
         }
         catch (exception) {
             setErrorMessage('Cannot create new blog');
@@ -74,7 +81,7 @@ const App = () => {
     if (user === null) {
         return (
             <div>
-                {errorMessage !== '' && <p>{errorMessage}</p>}
+                {errorMessage !== '' && <div className='error'>{errorMessage}</div>}
                 <h2>Log in to application</h2>
                 <form onSubmit={handleLogin}>
                     <div>
@@ -103,6 +110,7 @@ const App = () => {
 
     return (
         <div>
+            {message !== '' && <div className='message'>{message}</div>}
             <h2>blogs</h2>
             <div>
                 <p>{user.username} is logged in</p>
